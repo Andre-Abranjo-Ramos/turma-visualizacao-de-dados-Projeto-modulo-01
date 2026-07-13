@@ -176,3 +176,42 @@ caminho_hist = os.path.join(BASE_DIR, "histograma_salarios.png")
 plt.savefig(caminho_hist, dpi=150)
 plt.show()
 print(f"✅ Gráfico salvo: {caminho_hist}")
+
+
+# ------------------------------------------------------------
+# 7. GRÁFICO 2 — Boxplot de salário por Departamento
+
+# Ordenar departamentos por mediana decrescente
+ordem_depto = (
+    df_q1.groupby("DEPARTMENT_NAME")["SALARY"]
+    .median()
+    .sort_values(ascending=False)
+    .index
+)
+
+dados_boxplot = [
+    df_q1[df_q1["DEPARTMENT_NAME"] == dep]["SALARY"].values
+    for dep in ordem_depto
+]
+
+fig, ax = plt.subplots(figsize=(12, 6))
+bp = ax.boxplot(dados_boxplot, patch_artist=True,
+                medianprops=dict(color="red", linewidth=2))
+
+# Colorir cada caixa com uma cor diferente para distinção visual
+cores = plt.cm.Set2.colors
+for patch, cor in zip(bp["boxes"], cores * 10):
+    patch.set_facecolor(cor)
+
+ax.set_xticklabels(ordem_depto, rotation=45, ha="right", fontsize=9)
+ax.set_title("Boxplot de Salário por Departamento",
+             fontsize=14, fontweight="bold")
+ax.set_ylabel("Salário")
+ax.yaxis.set_major_formatter(mticker.FuncFormatter(
+    lambda x, _: f"{x:,.0f}"))
+plt.tight_layout()
+
+caminho_box_depto = os.path.join(BASE_DIR, "boxplot_departamento.png")
+plt.savefig(caminho_box_depto, dpi=150)
+plt.show()
+print(f"✅ Gráfico salvo: {caminho_box_depto}")
