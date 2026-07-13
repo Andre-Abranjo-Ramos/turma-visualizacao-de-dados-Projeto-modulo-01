@@ -124,3 +124,30 @@ print(
     .head(10)
     .round(2)
 )
+
+# ------------------------------------------------------------
+# 5. IDENTIFICAÇÃO DE OUTLIERS
+
+
+print("\n" + "=" * 55)
+print("ANÁLISE DE OUTLIERS")
+print("=" * 55)
+
+Q1 = salario.quantile(0.25)
+Q3 = salario.quantile(0.75)
+IQR = Q3 - Q1
+limite_inferior = Q1 - 1.5 * IQR
+limite_superior = Q3 + 1.5 * IQR
+
+outliers = df_q1[
+    (df_q1["SALARY"] < limite_inferior) |
+    (df_q1["SALARY"] > limite_superior)
+]
+
+print(f"Q1: {Q1:,.2f} | Q3: {Q3:,.2f} | IQR: {IQR:,.2f}")
+print(f"Limite inferior: {limite_inferior:,.2f}")
+print(f"Limite superior: {limite_superior:,.2f}")
+print(f"Outliers encontrados: {len(outliers)} funcionários")
+print("\nFuncionários com salário fora do padrão:")
+print(outliers[["FIRST_NAME", "LAST_NAME", "SALARY",
+                "DEPARTMENT_NAME", "JOB_TITLE"]])
