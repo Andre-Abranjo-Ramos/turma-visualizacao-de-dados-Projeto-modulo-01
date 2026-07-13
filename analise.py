@@ -50,3 +50,45 @@ print(df_q1.head())
 
 print("\n--- Primeiras linhas Query 02 ---")
 print(df_q2.head())
+
+
+# ------------------------------------------------------------
+# 3. ESTATÍSTICAS DESCRITIVAS — QUERY 01
+
+print("\n" + "=" * 55)
+print("ESTATÍSTICAS DESCRITIVAS — SALÁRIOS (Query 01)")
+print("=" * 55)
+
+salario = df_q1["SALARY"]
+
+print(f"Média salarial:   $ {salario.mean():,.2f}")
+print(f"Mediana salarial: $ {salario.median():,.2f}")
+print(f"Salário mínimo:   $ {salario.min():,.2f}")
+print(f"Salário máximo:   $ {salario.max():,.2f}")
+print(f"Desvio padrão:    $ {salario.std():,.2f}")
+
+# Estatísticas agrupadas por departamento
+print("\n--- Salário médio por Departamento ---")
+print(
+    df_q1.groupby("DEPARTMENT_NAME")["SALARY"]
+    .agg(["mean", "median", "min", "max", "count"])
+    .rename(columns={
+        "mean":   "Media",
+        "median": "Mediana",
+        "min":    "Minimo",
+        "max":    "Maximo",
+        "count":  "Funcionarios"
+    })
+    .sort_values("Media", ascending=False)
+    .round(2)
+)
+
+# Top 10 cargos por salário médio
+print("\n--- Salário médio por Cargo (Top 10) ---")
+print(
+    df_q1.groupby("JOB_TITLE")["SALARY"]
+    .mean()
+    .sort_values(ascending=False)
+    .head(10)
+    .round(2)
+)
