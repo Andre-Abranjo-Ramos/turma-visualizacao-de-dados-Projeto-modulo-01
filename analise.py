@@ -151,3 +151,28 @@ print(f"Outliers encontrados: {len(outliers)} funcionários")
 print("\nFuncionários com salário fora do padrão:")
 print(outliers[["FIRST_NAME", "LAST_NAME", "SALARY",
                 "DEPARTMENT_NAME", "JOB_TITLE"]])
+
+
+# ------------------------------------------------------------
+# 6. GRÁFICO 1 — Histograma de distribuição de salários
+
+
+plt.figure(figsize=(10, 5))
+plt.hist(df_q1["SALARY"], bins=20, color="#4C72B0",
+         edgecolor="white", alpha=0.85)
+plt.axvline(salario.mean(), color="red",
+            linestyle="--", linewidth=1.5,
+            label=f"Média: {salario.mean():,.0f}")
+plt.axvline(salario.median(), color="orange",
+            linestyle="--", linewidth=1.5,
+            label=f"Mediana: {salario.median():,.0f}")
+plt.title("Distribuição de Salários — Base HR", fontsize=14, fontweight="bold")
+plt.xlabel("Salário")
+plt.ylabel("Número de Funcionários")
+plt.legend()
+plt.tight_layout()
+
+caminho_hist = os.path.join(BASE_DIR, "histograma_salarios.png")
+plt.savefig(caminho_hist, dpi=150)
+plt.show()
+print(f"✅ Gráfico salvo: {caminho_hist}")
