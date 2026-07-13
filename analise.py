@@ -215,3 +215,47 @@ caminho_box_depto = os.path.join(BASE_DIR, "boxplot_departamento.png")
 plt.savefig(caminho_box_depto, dpi=150)
 plt.show()
 print(f"✅ Gráfico salvo: {caminho_box_depto}")
+
+
+# ------------------------------------------------------------
+# 8. GRÁFICO 3 — Boxplot de salário por Região
+
+
+# Ordenar regiões por mediana decrescente
+ordem_regiao = (
+    df_q2.groupby("REGION_NAME")["SALARY"]
+    .median()
+    .sort_values(ascending=False)
+    .index
+)
+
+dados_regiao = [
+    df_q2[df_q2["REGION_NAME"] == reg]["SALARY"].values
+    for reg in ordem_regiao
+]
+
+fig, ax = plt.subplots(figsize=(10, 5))
+bp2 = ax.boxplot(dados_regiao, patch_artist=True,
+                 medianprops=dict(color="red", linewidth=2))
+
+# Uma cor por região
+for patch, cor in zip(bp2["boxes"], ["#4C72B0", "#DD8452",
+                                     "#55A868", "#C44E52"]):
+    patch.set_facecolor(cor)
+
+ax.set_xticklabels(ordem_regiao, rotation=20, ha="right", fontsize=10)
+ax.set_title("Boxplot de Salário por Região",
+             fontsize=14, fontweight="bold")
+ax.set_ylabel("Salário")
+ax.yaxis.set_major_formatter(mticker.FuncFormatter(
+    lambda x, _: f"{x:,.0f}"))
+plt.tight_layout()
+
+caminho_box_regiao = os.path.join(BASE_DIR, "boxplot_regiao.png")
+plt.savefig(caminho_box_regiao, dpi=150)
+plt.show()
+print(f"✅ Gráfico salvo: {caminho_box_regiao}")
+
+print("\n" + "=" * 55)
+print("ANÁLISE CONCLUÍDA — todos os gráficos foram gerados")
+print("=" * 55)
